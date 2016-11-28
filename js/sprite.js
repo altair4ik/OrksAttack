@@ -8,6 +8,7 @@
         this.url = url;
         this.dir = dir || 'horizontal';
         this.once = once;
+        this.done = false;
     };
 
     Sprite.prototype = {
