@@ -1,8 +1,8 @@
 function Wall(pos) {
     this.pos = pos;
-    var sprite = new Sprite('images/wall.png', [0, 0], [32, 32], 1, [0]);
-    this.height = 32;
-    this.width = 32;
+    var sprite = new Sprite('images/wall.png', [0, 0], [20, 20], 1, [0]);
+    this.height = 20;
+    this.width = 20;
     this.render = function (ctx) {
         sprite.render(ctx);
     };

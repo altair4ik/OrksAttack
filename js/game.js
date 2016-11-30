@@ -15,23 +15,29 @@ var requestAnimFrame = (function(){
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
 var terrainPattern;
-var player = new Player();
 var shots = [];
 var explosions = [];
 var lastFire = Date.now();
-var enemies = createEnemy();
-var walls = createWall();
+var enemies = [];
+var walls = [];
+var player;
+var numberOfEnemies;
+var score = 0;
+var scoreEl = document.getElementById('score');
+var isGameOver = false;
 canvas.width = 600;
 canvas.height = 600;
 document.body.appendChild(canvas);
+createBattleField(configMatrix);
 
 // The main game loop
 var lastTime;
 function main() {
     var now = Date.now();
     var dt = (now - lastTime) / 1000.0;
-
-    update(dt);
+    if(!isGameOver){
+        update(dt);
+    }
     render();
 
     lastTime = now;
@@ -59,6 +65,10 @@ function update(dt) {
     checkCollisions();
     checkEnemyWall(dt);
     checkShotWall();
+    deathMatch(numberOfEnemies);
+    checkIsGameOver();
+
+    scoreEl.innerHTML = score;
 }
 
 function deleteFinishExplosions() {
@@ -87,7 +97,7 @@ function handleInput(dt) {
         player.moveRight(dt);
     }
     if(input.isDown('SPACE')) {
-        if (Date.now() - lastFire > 500) {
+        if (Date.now() - lastFire > 350) {
             var shot = new Shot(player.direction);
             switch (player.direction) {
                 case 'up':
@@ -142,9 +152,9 @@ function renderEntity(entity) {
 
 function init() {
     terrainPattern = ctx.createPattern(resources.get('images/terrain.png'), 'repeat');
-
-
-    reset();
+    document.getElementById('play-again').addEventListener('click', function() {
+        reset();
+    });
     lastTime = Date.now();
     main();
 }
@@ -267,6 +277,8 @@ function checkCollisions() {
 
             if(boxCollides(enemyPos, enemyHeight, enemyWidth, shotPos, shotHeight, shotWidth)) {
                 // Remove the enemy
+                score += 50;
+                numberOfEnemies = enemies.length;
                 enemies.splice(i, 1);
                 i--;
                 shots.splice(j, 1);
@@ -275,6 +287,19 @@ function checkCollisions() {
             }
         }
     }
+}
+
+function checkIsGameOver() {
+    enemies.forEach(function (item) {
+        if(boxCollides(item.pos, item.height, item.width, player.pos, player.height, player.width)){
+            gameOver();
+        }
+    })
+}
+
+function gameOver() {
+    document.getElementById('game-over').style.display = 'block';
+    isGameOver = true;
 }
 
 resources.load([
@@ -293,5 +318,10 @@ resources.onReady(init);
 
 // Reset game to original state
 function reset() {
-    player.pos = [canvas.width / 2, canvas.height / 2];
+    shots.length = 0;
+    enemies.length = 0;
+    numberOfEnemies = 0;
+    createBattleField(configMatrix);
+    document.getElementById('game-over').style.display = 'none';
+    isGameOver = false;
 }

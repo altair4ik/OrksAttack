@@ -1,5 +1,5 @@
-function Player() {
-    this.pos = [0, 0];
+function Player(pos) {
+    this.pos = pos;
     this.height = 32;
     this.width = 32;
     this.direction = 'down';
@@ -8,7 +8,7 @@ function Player() {
         _spriteRight = new Sprite('images/mage.png', [0, 64], [32, 32], 9, [0, 1, 2]),
         _spriteUp = new Sprite('images/mage.png', [0, 96], [32, 32], 9, [0, 1, 2]),
         _sprite = _spriteDown,
-        _speed = 50;
+        _speed = 100;
     this.render = function (ctx) {
         _sprite.render(ctx);
     };

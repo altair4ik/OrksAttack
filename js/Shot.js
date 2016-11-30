@@ -2,8 +2,8 @@ function Shot(direction) {
     var sprite,
         speed = 150;
     this.pos = [0, 0];
-    this.height = 16;
-    this.width = 28;
+    this.height = 15;
+    this.width = 15;
 
     switch(direction){
         case 'up':
