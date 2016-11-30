@@ -10,6 +10,18 @@ function createEnemy() {
     return enemies;
 }
 
+function createWall() {
+    var walls = [];
+    walls.push(new Wall([250,250]));
+    walls.push(new Wall([250,282]));
+    walls.push(new Wall([250,314]));
+    walls.push(new Wall([250,346]));
+    walls.push(new Wall([250,378]));
+    walls.push(new Wall([250,410]));
+    walls.push(new Wall([500,500]));
+    return walls;
+}
+
 var gameMatrix = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

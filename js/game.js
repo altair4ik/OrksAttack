@@ -20,6 +20,7 @@ var shots = [];
 var explosions = [];
 var lastFire = Date.now();
 var enemies = createEnemy();
+var walls = createWall();
 canvas.width = 600;
 canvas.height = 600;
 document.body.appendChild(canvas);
@@ -35,7 +36,7 @@ function main() {
 
     lastTime = now;
     requestAnimFrame(main);
-};
+}
 
 function update(dt) {
     shots.forEach(function (item) {
@@ -48,11 +49,16 @@ function update(dt) {
     explosions.forEach(function (item) {
         item.update(dt);
     });
+    walls.forEach(function (item) {
+        item.update(dt);
+    });
     deleteFinishExplosions();
     handleInput(dt);
     checkPlayerBounds();
     checkShotBounds();
     checkCollisions();
+    checkEnemyWall(dt);
+    checkShotWall();
 }
 
 function deleteFinishExplosions() {
@@ -121,6 +127,9 @@ function render() {
     });
     explosions.forEach(function (item) {
         renderEntity(item);
+    });
+    walls.forEach(function (item) {
+        renderEntity(item);
     })
 }
 
@@ -159,6 +168,33 @@ function checkPlayerBounds() {
     }
 }
 
+function checkEnemyWall(dt) {
+    enemies.forEach(function (item) {
+        var enemy = item;
+        walls.forEach(function (item) {
+            if (boxCollides(enemy.pos, enemy.height, enemy.width, item.pos, item.height, item.width)) {
+                switch (enemy.direction){
+                    case 'up':
+                        enemy.pos[1] += enemy.speed * dt;
+                        enemy.rotate();
+                        break;
+                    case 'down':
+                        enemy.pos[1] -= enemy.speed * dt;
+                        enemy.rotate();
+                        break;
+                    case 'left':
+                        enemy.pos[0] += enemy.speed * dt;
+                        enemy.rotate();
+                        break;
+                    default:
+                        enemy.pos[0] -= enemy.speed * dt;
+                        enemy.rotate();
+                }
+            }
+        });
+    })
+}
+
 function checkEnemyBounds(enemy) {
     if(enemy.pos[0] < 0) {
         enemy.pos[0] = 0;
@@ -185,6 +221,19 @@ function checkShotBounds() {
             shots[i].pos[0] > canvas.width || shots[i].pos[0] < 0) {
             shots.splice(i, 1);
             i--;
+        }
+    }
+}
+
+function checkShotWall() {
+    for(var i = 0; i < shots.length; i++){
+        for(var j = 0; j < walls.length; j++){
+            if (boxCollides(shots[i].pos, shots[i].height, shots[i].width,
+                    walls[j].pos, walls[j].height, walls[j].width)) {
+                shots.splice(i, 1);
+                i--;
+                break;
+            }
         }
     }
 }
@@ -236,7 +285,8 @@ resources.load([
     'images/shotLeft.png',
     'images/shotRight.png',
     'images/enemy.png',
-    'images/explosion.png'
+    'images/explosion.png',
+    'images/wall.png'
 ]);
 resources.onReady(init);
 
@@ -244,4 +294,4 @@ resources.onReady(init);
 // Reset game to original state
 function reset() {
     player.pos = [canvas.width / 2, canvas.height / 2];
-};
+}

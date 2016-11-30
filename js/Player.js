@@ -15,24 +15,52 @@ function Player() {
     this.moveUp = function (dt) {
         this.direction = 'up';
         this.pos[1] -= _speed * dt;
+
+        walls.forEach(function (item) {
+            if (boxCollides(player.pos, player.height, player.width, item.pos, item.height, item.width)) {
+                player.pos[1] += _speed * dt;
+            }
+        });
+
         _sprite = _spriteUp;
         _sprite.update(dt);
     };
     this.moveDown = function (dt) {
         this.direction = 'down';
         this.pos[1] += _speed * dt;
+
+        walls.forEach(function (item) {
+            if (boxCollides(player.pos, player.height, player.width, item.pos, item.height, item.width)) {
+                player.pos[1] -= _speed * dt;
+            }
+        });
+
         _sprite = _spriteDown;
         _sprite.update(dt);
     };
     this.moveRight = function (dt) {
         this.direction = 'right';
         this.pos[0] += _speed * dt;
+
+        walls.forEach(function (item) {
+            if (boxCollides(player.pos, player.height, player.width, item.pos, item.height, item.width)) {
+                player.pos[0] -= _speed * dt;
+            }
+        });
+
         _sprite = _spriteRight;
         _sprite.update(dt);
     };
     this.moveLeft = function (dt) {
         this.direction = 'left';
         this.pos[0] -= _speed * dt;
+
+        walls.forEach(function (item) {
+            if (boxCollides(player.pos, player.height, player.width, item.pos, item.height, item.width)) {
+                player.pos[0] += _speed * dt;
+            }
+        });
+
         _sprite = _spriteLeft;
         _sprite.update(dt);
     };

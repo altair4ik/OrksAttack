@@ -7,7 +7,7 @@ function Explosion(pos) {
     this.pos = pos;
     this.update = function (dt) {
         sprite.update(dt)
-    }
+    };
     this.isDone = function () {
         return sprite.done;
     }
