@@ -318,6 +318,7 @@ resources.onReady(init);
 
 // Reset game to original state
 function reset() {
+    score = 0;
     shots.length = 0;
     enemies.length = 0;
     numberOfEnemies = 0;
